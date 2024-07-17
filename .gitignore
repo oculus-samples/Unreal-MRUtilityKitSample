@@ -1,0 +1,13 @@
+Android_ASTC
+Binaries/*
+Build/*
+DerivedDataCache/*
+Intermediate/*
+Saved/*
+Plugins/MRUtilityKit
+Plugins/MetaXR
+Plugins/OculusXR
+Plugins/OculusXRTesting
+Plugins/Developer/RiderLink
+.cache
+compile_commands.json
