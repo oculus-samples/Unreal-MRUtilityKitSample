@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.3",
+	"EngineAssociation": "5.4",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -32,5 +32,8 @@
 			"Name": "PCG",
 			"Enabled": true
 		}
+	],
+	"TargetPlatforms": [
+		"Android"
 	]
 }
