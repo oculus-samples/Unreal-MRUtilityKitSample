@@ -30,6 +30,8 @@ AVRPawn::AVRPawn()
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 	MotionControllerLeft = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("MotionControllerLeft"));
 	MotionControllerRight = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("MotionControllerRight"));
+	LegacyPoseTransformLeft = CreateDefaultSubobject<UOculusXRLegacyPoseTransformComponent>(TEXT("LegacyPoseTransformLeft"));
+	LegacyPoseTransformRight = CreateDefaultSubobject<UOculusXRLegacyPoseTransformComponent>(TEXT("LegacyPoseTransformRight"));
 	DeviceVisualizationLeft = CreateDefaultSubobject<UXRDeviceVisualizationComponent>(TEXT("DeviceVisualizationLeft"));
 	DeviceVisualizationRight = CreateDefaultSubobject<UXRDeviceVisualizationComponent>(TEXT("DeviceVisualizationRight"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
@@ -49,29 +51,30 @@ AVRPawn::AVRPawn()
 	MotionControllerRight->MotionSource = TEXT("Right");
 	MotionControllerRight->SetupAttachment(Root);
 
+	LegacyPoseTransformLeft->SetupAttachment(MotionControllerLeft);
+	LegacyPoseTransformRight->SetupAttachment(MotionControllerRight);
+
 	SpringArm->SetupAttachment(Root);
 	Camera->SetupAttachment(Root);
 
-	DeviceVisualizationLeft->DisplayModelSource = TEXT("OculusXRHMD");
 	DeviceVisualizationLeft->SetIsVisualizationActive(true);
-	DeviceVisualizationLeft->SetupAttachment(MotionControllerLeft);
+	DeviceVisualizationLeft->SetupAttachment(LegacyPoseTransformLeft);
 
-	DeviceVisualizationRight->DisplayModelSource = TEXT("OculusXRHMD");
 	DeviceVisualizationRight->SetIsVisualizationActive(true);
-	DeviceVisualizationRight->SetupAttachment(MotionControllerRight);
+	DeviceVisualizationRight->SetupAttachment(LegacyPoseTransformRight);
 
 	DemoMenu->SetupAttachment(SpringArm);
 	DemoMenu->SetRelativeRotation(FRotator::MakeFromEuler(FVector(0.0, 0.0, 180.0)));
 
-	SpringArm->SetupAttachment(MotionControllerLeft);
+	SpringArm->SetupAttachment(LegacyPoseTransformLeft);
 	SpringArm->TargetArmLength = 0.0;
 	SpringArm->bInheritYaw = true;
 	SpringArm->bInheritPitch = true;
 	SpringArm->bInheritRoll = true;
 
-	WidgetInteraction->SetupAttachment(MotionControllerRight);
+	WidgetInteraction->SetupAttachment(LegacyPoseTransformRight);
 
-	Spline->SetupAttachment(MotionControllerRight);
+	Spline->SetupAttachment(LegacyPoseTransformRight);
 
 	SplineMesh->SetupAttachment(Spline);
 	SplineMesh->SetMobility(EComponentMobility::Movable);

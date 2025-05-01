@@ -10,6 +10,7 @@ LICENSE file in the root directory of this source tree.
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "InputActionValue.h"
+#include "OculusXRLegacyPoseTransformComponent.h"
 #include "VRPawn.generated.h"
 
 UCLASS()
@@ -26,6 +27,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UMotionControllerComponent* MotionControllerRight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UOculusXRLegacyPoseTransformComponent* LegacyPoseTransformLeft;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UOculusXRLegacyPoseTransformComponent* LegacyPoseTransformRight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UXRDeviceVisualizationComponent* DeviceVisualizationLeft;

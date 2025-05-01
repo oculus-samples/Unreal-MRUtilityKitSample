@@ -23,15 +23,16 @@ public class MRUtilityKitSample : ModuleRules
 
 
         PrivateDependencyModuleNames.AddRange(new string[] {
-        "HeadMountedDisplay",
-        "UMG",
-        "MRUtilityKit",
-        "OculusXRHMD",
-        "OculusXRAnchors",
-        "OculusXRScene",
-        "ProceduralMeshComponent",
-        "PCG"
-    });
+            "HeadMountedDisplay",
+            "UMG",
+            "MRUtilityKit",
+            "OculusXRHMD",
+            "OculusXRAnchors",
+            "OculusXRScene",
+            "OculusXRInput",
+            "ProceduralMeshComponent",
+            "PCG"
+        });
 
         if (Target.bBuildEditor)
         {
