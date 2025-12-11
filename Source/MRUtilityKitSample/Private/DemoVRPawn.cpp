@@ -61,19 +61,7 @@ void ADemoVRPawn::DisplayArrow(FVector Location, FVector Normal, int32 ArrowInde
 	const auto Arrow = GetArrowSafe(ArrowIndex);
 	Arrow->SetActorHiddenInGame(false);
 	Arrow->SetActorLocation(Location);
-
-	const bool IsNormalPointingUp = UKismetMathLibrary::NearlyEqual_FloatFloat(abs(Normal.Dot(FVector::UpVector)), 1.0, 0.01);
-
-	FRotator Rotator;
-	if (IsNormalPointingUp)
-	{
-		Rotator = UKismetMathLibrary::MakeRotFromZX(FVector::RightVector, Normal);
-	}
-	else
-	{
-		Rotator = UKismetMathLibrary::MakeRotFromZX(FVector::UpVector, Normal);
-	}
-
+	const FRotator Rotator = UKismetMathLibrary::FindLookAtRotation(FVector::ZeroVector, Normal.GetSafeNormal());
 	Arrow->SetActorRotation(Rotator);
 }
 
