@@ -30,6 +30,8 @@ public class MRUtilityKitSample : ModuleRules
             "OculusXRAnchors",
             "OculusXRScene",
             "OculusXRInput",
+            "OculusInteraction",
+            "OculusInteractionPrebuilts",
             "ProceduralMeshComponent",
             "PCG"
         });

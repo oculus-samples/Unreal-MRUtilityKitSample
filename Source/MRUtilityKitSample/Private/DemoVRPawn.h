@@ -9,7 +9,10 @@ LICENSE file in the root directory of this source tree.
 
 #include "CoreMinimal.h"
 #include "VRPawn.h"
+#include "InputActionValue.h"
 #include "DemoVRPawn.generated.h"
+
+class UInputAction;
 
 UCLASS()
 class ADemoVRPawn : public AVRPawn
@@ -26,6 +29,18 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor> ArrowActor;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* ShowMenuInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Menu")
+	AActor* Menu;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Menu")
+	float MenuForwardDistance = 100.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Menu")
+	float MenuVerticalOffset = -20.0f;
+
 	UFUNCTION(BlueprintCallable)
 	void HideShapes();
 
@@ -38,8 +53,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	AActor* GetArrowSafe(int32 Index = 0);
 
+	ADemoVRPawn();
+
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
 protected:
 	void BeginPlay() override;
+	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
 	UPROPERTY()
@@ -50,4 +70,9 @@ private:
 
 	UPROPERTY()
 	UMaterialInstanceDynamic* CubeMaterialInstance = nullptr;
+
+	FTimerHandle MenuDelayTimerHandle;
+
+	void OnShowMenuCompleted(const FInputActionValue& Value);
+	void PlaceMenu();
 };

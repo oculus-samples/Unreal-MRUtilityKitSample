@@ -48,15 +48,16 @@ git clone https://github.com/oculus-samples/Unreal-MRUtilityKitSample
 
 ### Launch the project in the Unreal Editor using one of the following options.
 
-#### Epic Games Launcher with MetaXR plugin
+#### Epic Games Launcher with MetaXR and Interaction SDK plugins
 
-The easiest way to get started is to use the prebuilt Unreal Engine from the Epic Games Launcher, with MetaXR plugin.
+The easiest way to get started is to use the prebuilt Unreal Engine from the Epic Games Launcher, with MetaXR and Interaction SDK plugins.
 
 1. Install the [Epic Games Launcher](https://www.epicgames.com/store/en-US/download)
 2. In the launcher, install UE5 (recommended).
 3. Download and install the MetaXR plugin from the [Unreal Engine 5 Integration download page](https://developer.oculus.com/downloads/package/unreal-engine-5-integration).
-4. Launch the Unreal Editor
-5. From "Recent Projects", click "Browse" and select `MRUtilityKitSample.uproject`
+4. Download and install the Interaction SDK plugin from the [Meta Interaction SDK download page](https://developers.meta.com/horizon/downloads/package/meta-xr-interaction-sdk-unreal).
+5. Launch the Unreal Editor
+6. From "Recent Projects", click "Browse" and select `MRUtilityKitSample.uproject`
 
 #### Meta fork of Epic’s Unreal Engine
 
@@ -84,3 +85,9 @@ Make sure you have Visual Studio installed properly:
 
 # Licenses
 The [Meta License](./LICENSE) applies to the SDK and supporting material. The MIT License applies to only certain, clearly marked documents. If an individual file does not indicate which license it is subject to, then the Meta License applies.
+
+## AI coding agents
+
+This repo is wired up for AI coding agents — `AGENTS.md`, `.vscode/extensions.json`, `.mcp.json`, `.cursor/rules/`, and a few client-specific dotfiles surface the **Meta Horizon** VS Code/Cursor extension, the `hzdb` MCP server, and the Meta Quest skill set automatically.
+
+Full toolchain, including Unreal skills and per-client install instructions: [github.com/meta-quest/agentic-tools](https://github.com/meta-quest/agentic-tools).

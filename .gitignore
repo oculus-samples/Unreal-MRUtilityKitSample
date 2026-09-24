@@ -7,7 +7,10 @@ Saved/*
 Plugins/MRUtilityKit
 Plugins/MetaXR
 Plugins/OculusXR
+Plugins/OculusInteraction
+Plugins/OculusInteractionSamples
 Plugins/OculusXRTesting
 Plugins/Developer/RiderLink
 .cache
 compile_commands.json
+MRUtilityKitSample.uproject.DotSettings.user

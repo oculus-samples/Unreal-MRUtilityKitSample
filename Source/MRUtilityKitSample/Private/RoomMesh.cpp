@@ -1,4 +1,10 @@
-// Copyright (c) Meta Platforms, Inc. and affiliates.
+/*
+Copyright (c) Meta Platforms, Inc. and affiliates.
+All rights reserved.
+
+This source code is licensed under the license found in the
+LICENSE file in the root directory of this source tree.
+*/
 
 #include "RoomMesh.h"
 #include "MRUtilityKitSubsystem.h"
@@ -14,7 +20,11 @@ void ARoomMesh::BeginPlay()
 {
 	Super::BeginPlay();
 
-	const auto Subsystem = GetGameInstance()->GetSubsystem<UMRUKSubsystem>();
+	UMRUKSubsystem* Subsystem = GetGameInstance()->GetSubsystem<UMRUKSubsystem>();
+	if (!Subsystem)
+	{
+		return;
+	}
 	if (Subsystem->SceneLoadStatus == EMRUKInitStatus::Complete)
 	{
 		GenerateProceduralMeshes(Subsystem->GetCurrentRoom());
@@ -33,9 +43,13 @@ void ARoomMesh::OnRoomCreated(AMRUKRoom* Room)
 	}
 }
 
-void ARoomMesh::GenerateProceduralMeshes(AMRUKRoom* Room)
+void ARoomMesh::GenerateProceduralMeshes(const AMRUKRoom* Room)
 {
-	UMRUKRoomMesh* RoomMesh = Room->RoomMesh;
+	if (!Room)
+	{
+		return;
+	}
+	const UMRUKRoomMesh* RoomMesh = Room->RoomMesh;
 	if (!RoomMesh)
 	{
 		return;
@@ -49,7 +63,7 @@ void ARoomMesh::GenerateProceduralMeshes(AMRUKRoom* Room)
 	ProceduralMesh->RegisterComponent();
 	AddInstanceComponent(ProceduralMesh);
 
-	int SectionIndex = 0;
+	int32 SectionIndex = 0;
 
 	for (const FMRUKRoomFace& RoomFace : RoomMesh->Faces)
 	{
@@ -65,34 +79,34 @@ void ARoomMesh::GenerateProceduralMeshes(AMRUKRoom* Room)
 		Colors.Reserve(RoomFace.Indices.Num());
 
 		// Assign colors based on semantic label
-		FLinearColor color;
+		FLinearColor Color = FLinearColor::Black;
 		if (RoomFace.SemanticClassification == FMRUKLabels::Floor)
 		{
-			color = FLinearColor(0.2f, 0.6f, 0.2f, 1.0f); // Green for floor
+			Color = FLinearColor(0.2f, 0.6f, 0.2f, 1.0f); // Green for floor
 		}
 		else if (RoomFace.SemanticClassification == FMRUKLabels::Ceiling)
 		{
-			color = FLinearColor(0.8f, 0.8f, 0.8f, 1.0f); // White for ceiling
+			Color = FLinearColor(0.8f, 0.8f, 0.8f, 1.0f); // White for ceiling
 		}
 		else if (RoomFace.SemanticClassification == FMRUKLabels::WallFace)
 		{
-			color = FLinearColor(0.6f, 0.6f, 0.8f, 1.0f); // Blue for walls
+			Color = FLinearColor(0.6f, 0.6f, 0.8f, 1.0f); // Blue for walls
 		}
 		else if (RoomFace.SemanticClassification == FMRUKLabels::InvisibleWallFace)
 		{
-			color = FLinearColor(0.8f, 0.3f, 0.8f, 1.0f); // Purple for invisible walls
+			Color = FLinearColor(0.8f, 0.3f, 0.8f, 1.0f); // Purple for invisible walls
 		}
 		else if (RoomFace.SemanticClassification == FMRUKLabels::InnerWallFace)
 		{
-			color = FLinearColor(0.4f, 0.4f, 0.6f, 1.0f); // Darker blue for inner walls
+			Color = FLinearColor(0.4f, 0.4f, 0.6f, 1.0f); // Darker blue for inner walls
 		}
 		else if (RoomFace.SemanticClassification == FMRUKLabels::WindowFrame)
 		{
-			color = FLinearColor(0.7f, 0.9f, 1.0f, 1.0f); // Light blue for windows
+			Color = FLinearColor(0.7f, 0.9f, 1.0f, 1.0f); // Light blue for windows
 		}
 		else if (RoomFace.SemanticClassification == FMRUKLabels::DoorFrame)
 		{
-			color = FLinearColor(0.6f, 0.4f, 0.2f, 1.0f); // Brown for doors
+			Color = FLinearColor(0.6f, 0.4f, 0.2f, 1.0f); // Brown for doors
 		}
 
 		// Fill in the vertices and indices
@@ -100,9 +114,9 @@ void ARoomMesh::GenerateProceduralMeshes(AMRUKRoom* Room)
 		{
 			if (RoomMesh->Vertices.IsValidIndex(Index))
 			{
-				Vertices.Push(RoomMesh->Vertices[Index]);
-				Indices.Push(Indices.Num()); // Add the current index in the Vertices array
-				Colors.Push(color);
+				Vertices.Add(RoomMesh->Vertices[Index]);
+				Indices.Add(Indices.Num()); // Add the current index in the Vertices array
+				Colors.Add(Color);
 			}
 		}
 

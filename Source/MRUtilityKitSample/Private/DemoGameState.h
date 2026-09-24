@@ -5,6 +5,7 @@ All rights reserved.
 This source code is licensed under the license found in the
 LICENSE file in the root directory of this source tree.
 */
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -19,7 +20,7 @@ class MRUTILITYKITSAMPLE_API ADemoGameState : public AGameState
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString CurrentDemoName = "Raycast";
+	FString CurrentDemoName = "RoomDetails";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EMRUKPositioningMethod BestPose = EMRUKPositioningMethod::Edge;

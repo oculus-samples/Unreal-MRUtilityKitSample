@@ -5,18 +5,16 @@ All rights reserved.
 This source code is licensed under the license found in the
 LICENSE file in the root directory of this source tree.
 */
+
 #include "SampleEditorMRUKMenuBase.h"
 
 #include "Components/VerticalBox.h"
 #include "Components/VerticalBoxSlot.h"
 
-namespace
-{
-	// Constants for widget path construction
-	const TCHAR* const GameSamplePath = TEXT("/Game/Sample");
-	const TCHAR* const WidgetPrefix = TEXT("WBP_Menu");
-	const TCHAR* const WidgetSuffix = TEXT("_C");
-} // namespace
+// Constants for widget path construction
+static const TCHAR* const GameSamplePath = TEXT("/Game/Sample");
+static const TCHAR* const WidgetPrefix = TEXT("WBP_Menu");
+static const TCHAR* const WidgetSuffix = TEXT("_C");
 
 /**
  * Constructs the native widget by dynamically loading and creating a map-specific menu widget.

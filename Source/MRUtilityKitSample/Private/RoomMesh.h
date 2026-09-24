@@ -7,6 +7,8 @@
 #include "ProceduralMeshComponent.h"
 #include "RoomMesh.generated.h"
 
+class AMRUKRoom;
+
 UCLASS()
 class ARoomMesh : public AActor
 {
@@ -21,7 +23,7 @@ public:
 
 	ARoomMesh();
 
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY()
@@ -30,5 +32,5 @@ private:
 	UFUNCTION()
 	void OnRoomCreated(AMRUKRoom* Room);
 
-	void GenerateProceduralMeshes(AMRUKRoom* Room);
+	void GenerateProceduralMeshes(const AMRUKRoom* Room);
 };

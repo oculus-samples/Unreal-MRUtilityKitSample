@@ -5,11 +5,30 @@ All rights reserved.
 This source code is licensed under the license found in the
 LICENSE file in the root directory of this source tree.
 */
+
 #include "DemoVRPawn.h"
 #include "DemoGameState.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "IXRTrackingSystem.h"
+#include "IHeadMountedDisplay.h"
 
 static const FVector DefaultActorScale(0.1f);
+
+ADemoVRPawn::ADemoVRPawn()
+{
+	PrimaryActorTick.bCanEverTick = true;
+
+	if (!IsValid(ShowMenuInputAction))
+	{
+		static ConstructorHelpers::FObjectFinder<UInputAction> ShowMenuAction(TEXT("/Game/Common/Input/Actions/IA_ShowMenu.IA_ShowMenu"));
+		if (ShowMenuAction.Succeeded())
+		{
+			ShowMenuInputAction = ShowMenuAction.Object;
+		}
+	}
+}
 
 void ADemoVRPawn::BeginPlay()
 {
@@ -32,6 +51,34 @@ void ADemoVRPawn::BeginPlay()
 	}
 
 	HideShapes();
+
+	FTimerDelegate Timer;
+	Timer.BindLambda([this]() {
+		PlaceMenu();
+	});
+	GetWorldTimerManager().SetTimer(MenuDelayTimerHandle, Timer, 0.3f, false);
+}
+
+void ADemoVRPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	for (AActor* Arrow : Arrows)
+	{
+		if (IsValid(Arrow))
+		{
+			Arrow->Destroy();
+		}
+	}
+	Arrows.Empty();
+
+	if (IsValid(Cube))
+	{
+		Cube->Destroy();
+		Cube = nullptr;
+	}
+
+	CubeMaterialInstance = nullptr;
+
+	Super::EndPlay(EndPlayReason);
 }
 
 void ADemoVRPawn::HideShapes()
@@ -41,7 +88,7 @@ void ADemoVRPawn::HideShapes()
 		Cube->SetActorHiddenInGame(true);
 	}
 
-	for (const auto& Arrow : Arrows)
+	for (AActor* Arrow : Arrows)
 	{
 		Arrow->SetActorHiddenInGame(true);
 	}
@@ -60,7 +107,7 @@ void ADemoVRPawn::DisplayCube(FVector Location, FRotator Rotation, FVector Scale
 
 void ADemoVRPawn::DisplayArrow(FVector Location, FVector Normal, int32 ArrowIndex)
 {
-	const auto Arrow = GetArrowSafe(ArrowIndex);
+	AActor* Arrow = GetArrowSafe(ArrowIndex);
 	Arrow->SetActorHiddenInGame(false);
 	Arrow->SetActorLocation(Location);
 	const FRotator Rotator = UKismetMathLibrary::FindLookAtRotation(FVector::ZeroVector, Normal.GetSafeNormal());
@@ -69,7 +116,7 @@ void ADemoVRPawn::DisplayArrow(FVector Location, FVector Normal, int32 ArrowInde
 
 AActor* ADemoVRPawn::GetArrowSafe(int32 Index)
 {
-	check(0 <= Index);
+	check(Index >= 0);
 	check(ArrowActor);
 
 	if (Index < Arrows.Num())
@@ -94,4 +141,41 @@ AActor* ADemoVRPawn::GetArrowSafe(int32 Index)
 	}
 
 	return Arrows[Index];
+}
+
+void ADemoVRPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	if (UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInput->BindAction(ShowMenuInputAction, ETriggerEvent::Completed, this, &ADemoVRPawn::OnShowMenuCompleted);
+	}
+}
+
+void ADemoVRPawn::OnShowMenuCompleted(const FInputActionValue& Value)
+{
+	PlaceMenu();
+}
+
+void ADemoVRPawn::PlaceMenu()
+{
+	if (!Menu)
+	{
+		return;
+	}
+
+	FQuat DeviceRotation;
+	FVector DevicePosition;
+	GEngine->XRSystem->GetCurrentPose(IXRTrackingSystem::HMDDeviceId, DeviceRotation, DevicePosition);
+
+	FVector ForwardVector = DeviceRotation.GetForwardVector();
+	FVector ForwardOffset = ForwardVector * MenuForwardDistance;
+
+	FVector UpVector = DeviceRotation.GetUpVector();
+	FVector VerticalOffsetVec = UpVector * MenuVerticalOffset;
+
+	FVector NewLocation = DevicePosition + ForwardOffset + VerticalOffsetVec;
+
+	Menu->SetActorLocationAndRotation(NewLocation, DeviceRotation, false, nullptr, ETeleportType::None);
 }

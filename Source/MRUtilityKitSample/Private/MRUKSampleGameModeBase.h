@@ -13,7 +13,7 @@ LICENSE file in the root directory of this source tree.
 #include "MRUKSampleGameModeBase.generated.h"
 
 /**
- *
+ * Game mode for the MR Utility Kit sample project.
  */
 UCLASS()
 class AMRUKSampleGameModeBase : public AGameModeBase
