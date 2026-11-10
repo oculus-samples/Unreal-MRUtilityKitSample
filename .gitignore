@@ -14,3 +14,5 @@ Plugins/Developer/RiderLink
 .cache
 compile_commands.json
 MRUtilityKitSample.uproject.DotSettings.user
+*.slnx
+*.sln
